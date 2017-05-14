@@ -10,9 +10,18 @@ import UIKit
 
 class MoviesCollectionViewCell: UICollectionViewCell {
     
+    @IBOutlet weak var favoriteButton: UIButton!
+    @IBOutlet weak var addButton: UIButton!
+    
     override func awakeFromNib() {
         super.awakeFromNib()
     }
     
+    @IBAction func favoriteButtonTapped(sender: UIButton) {
+        
+    }
     
+    @IBAction func addButtonTapped(sender: UIButton) {
+        
+    }
 }
