@@ -6,11 +6,21 @@
 //  Copyright © 2017 SwiftTech. All rights reserved.
 //
 
-import Foundation
+import UIKit
+
+typealias jsonDictionary = [String: Any]
+
+private let kID = "id"
+private let kTitle = "title"
+private let kOverview = "overview"
+private let kReleaseDate = "release_date"
+private let kPosterPath = "poster_path"
+private let kBackDropPath = "backdrop_path"
+private let kRating = "vote_average"
 
 struct Movie: Equatable {
     
-    let id: String
+    let id: Int
     let title: String
     let year: String
     let runTime: String?
@@ -19,19 +29,20 @@ struct Movie: Equatable {
     let genre: String?
     let director: String?
     let cast: [String]?
-    let posterPath: String
-    let bannerPath: String
+    private var posterPath: String
+    private var backdropPath: String
     
-    typealias jsonDictionary = [String: Any]
+    var poster: UIImage?
+    var backdrop: UIImage?
     
     init?(jsonDict: jsonDictionary) {
-        guard let id = jsonDict["id"] as? String,
-            let title = jsonDict["title"] as? String,
-            let year = jsonDict["release_date"] as? String,
-            let userRating = jsonDict["vote_average"] as? Double,
-            let synopsis = jsonDict["overview"] as? String,
-            let posterPath = jsonDict["poster_path"] as? String,
-            let bannerPath = jsonDict["backdrop_path"] as? String
+        guard let id = jsonDict[kID] as? Int,
+            let title = jsonDict[kTitle] as? String,
+            let year = jsonDict[kReleaseDate] as? String,
+            let userRating = jsonDict[kRating] as? Double,
+            let synopsis = jsonDict[kOverview] as? String,
+            let posterPath = jsonDict[kPosterPath] as? String,
+            let bannerPath = jsonDict[kBackDropPath] as? String
             
             else { return nil }
         
@@ -41,11 +52,23 @@ struct Movie: Equatable {
         self.userRating = userRating
         self.synopsis = synopsis
         self.posterPath = posterPath
-        self.bannerPath = bannerPath
+        self.backdropPath = bannerPath
         self.runTime = nil
         self.genre = nil
         self.director = nil
         self.cast = nil
+        
+        if let posterURL = MovieController.shared.configuration?.posterURLMedium()?.appendingPathComponent(posterPath),
+            let posterData = try? Data(contentsOf: posterURL) {
+            
+            poster = UIImage(data: posterData)
+        }
+        
+        if let url = MovieController.shared.configuration?.backdropURLMedium()?.appendingPathComponent(backdropPath),
+            let backdropData = try? Data(contentsOf: url) {
+            
+            backdrop = UIImage(data: backdropData)
+        }
     }
 }
 

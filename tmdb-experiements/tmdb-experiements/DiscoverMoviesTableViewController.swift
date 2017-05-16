@@ -12,10 +12,14 @@ class DiscoverMoviesTableViewController: UITableViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-
-        MovieController.getMovieIDs(from: .nowPlaying) { (movieIDs) in
-            if let IDs = movieIDs {
-                print(IDs.count)
+        
+        MovieController.getMovies(from: .nowPlaying) { (movies) in
+            if let movies = movies {
+                print("I have this many movies: \(movies.count)")
+                
+                DispatchQueue.main.async {
+                    self.tableView.reloadData()
+                }
             }
         }
     }
@@ -24,7 +28,7 @@ class DiscoverMoviesTableViewController: UITableViewController {
 
     override func numberOfSections(in tableView: UITableView) -> Int {
         // #warning Incomplete implementation, return the number of sections
-        return 2
+        return 1
     }
 
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -35,7 +39,19 @@ class DiscoverMoviesTableViewController: UITableViewController {
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         guard let cell = tableView.dequeueReusableCell(withIdentifier: "MoviesCollectionCell", for: indexPath) as? DiscoverMoviesTableViewCell else { return UITableViewCell() }
 
-        // Configure the cell...
+        var movieCollectionKey = ""
+        switch indexPath.row {
+        case 0:
+            movieCollectionKey = MovieController.Endpoint.nowPlaying.description
+        case 1:
+            movieCollectionKey = MovieController.Endpoint.popular.description
+        case 2:
+            movieCollectionKey = MovieController.Endpoint.topRated.description
+        default:
+            break
+        }
+        
+        cell.update(with: movieCollectionKey)
 
         return cell
     }

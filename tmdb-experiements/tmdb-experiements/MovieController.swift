@@ -8,17 +8,18 @@
 
 import Foundation
 
-private let apiKey = "2f8796b287c2f5c208d03dabe8515190"
+let apiKey = "2f8796b287c2f5c208d03dabe8515190"
 
 class MovieController {
     
+    var configuration: TMDBapiConfiguration? = nil
     var movieCollections: [String: [Movie]] = [:]
     
     static let shared = MovieController()
     
     static let baseURLString = "https://api.themoviedb.org/3/movie/"
     
-    enum MovieCollection {
+    enum Endpoint {
         case nowPlaying
         case popular
         case topRated
@@ -48,30 +49,40 @@ class MovieController {
             }
         }
     }
-    
-    static func getMovieData(from endpoint: MovieCollection,_ movieID: String?, completion: @escaping (_ movieIDs: [Double]?) -> Void) {
-        
-        var urlParameters = ["api_key": apiKey]
-        var urlString = baseURLString
-        
-        switch endpoint {
-        case .nowPlaying:
-            urlString += endpoint.description
-        case .popular:
-            urlString += endpoint.description
-        case .topRated:
-            urlString += endpoint.description
-        case .id:
-            urlParameters["append_to_response"] = "credits,videos"
-            urlString += endpoint.description
+
+    fileprivate static func constructURL(for endpoint: Endpoint) -> (url: URL, parameters: [String: String])? {
+        guard var url = URL(string: baseURLString) else {
+            return nil
         }
         
-        guard let url = URL(string: baseURLString) else {
+        var urlParameters = ["api_key": apiKey]
+        
+        var pathComponent: String
+        switch endpoint {
+        case .nowPlaying:
+            pathComponent = endpoint.description
+        case .popular:
+            pathComponent = endpoint.description
+        case .topRated:
+            pathComponent = endpoint.description
+        case .id:
+            urlParameters["append_to_response"] = "credits,videos"
+            pathComponent = endpoint.description
+        }
+        
+        url.appendPathComponent(pathComponent)
+        
+        return (url, urlParameters)
+    }
+    
+    static func getMovies(from endpoint: Endpoint, completion: @escaping (_ movies: [Movie]?) -> Void) {
+        
+        guard let requestComponents = constructURL(for: endpoint) else {
             completion(nil)
             return
         }
         
-        NetworkController.performRequest(for: url, httpMethod: .get, urlParameters: urlParameters) { (data, error) in
+        NetworkController.performRequest(for: requestComponents.url, httpMethod: .get, urlParameters: requestComponents.parameters) { (data, error) in
             
             if let error = error {
                 print("Unable to get movies ids: \(error.localizedDescription)")
@@ -85,15 +96,17 @@ class MovieController {
             }
             
             do {
-                guard let json = try JSONSerialization.jsonObject(with: data, options: .allowFragments) as? [String: Any], let movieDicts = json["results"] as? [[String: Any]] else {
+                guard let json = try JSONSerialization.jsonObject(with: data, options: .allowFragments) as? jsonDictionary,
+                    let moviesDictArray = json["results"] as? [jsonDictionary] else {
                     print("unexpected JSON format")
                     completion(nil)
                     return
                 }
                 
-                let movieIDs = movieDicts.flatMap { $0["id"] as? Double }
+                let movies = moviesDictArray.flatMap { Movie(jsonDict: $0) }
+                MovieController.shared.movieCollections[endpoint.description] = movies
                 
-                completion(movieIDs)
+                completion(movies)
                 
             } catch {
                 print("Error deserializing json: \(error.localizedDescription)")
@@ -103,17 +116,13 @@ class MovieController {
         }
     }
     
-    static func getMovie(with ID: String, completion: @escaping (_ movie: Movie?) -> Void) {
-        
-        guard let url = URL(string: baseURLString + ID) else {
+    static func getDetails(for movie: Movie, completion: @escaping (_ movieJSON: jsonDictionary?) -> Void) {
+        guard let requestComponents = constructURL(for: .id("\(movie.id)")) else {
             completion(nil)
             return
         }
         
-        let urlParameters = ["api_key": apiKey, "append_to_response": "credits,videos"]
-        
-        NetworkController.performRequest(for: url, httpMethod: .get, urlParameters: urlParameters) { (data, error) in
-        
+        NetworkController.performRequest(for: requestComponents.url, httpMethod: .get, urlParameters: requestComponents.parameters) { (data, error) in
             if let error = error {
                 print("Unable to get movies ids: \(error.localizedDescription)")
                 completion(nil)
@@ -124,17 +133,21 @@ class MovieController {
                 completion(nil)
                 return
             }
+            
+            do {
+                guard let json = try JSONSerialization.jsonObject(with: data, options: .allowFragments) as? jsonDictionary else {
+                    print("unexpected JSON format")
+                    completion(nil)
+                    return
+                }
+                
+                completion(json)
+                
+            } catch {
+                print("Error deserializing json: \(error.localizedDescription)")
+                completion(nil)
+                return
+            }
         }
-    }
-    
-    static func getAllMovies(with IDs: [Double], completion: @escaping (_ movies: [Movie]) -> Void) {
-        
-        var allMovies: [Movie] = []
-        
-        let dispatchGroup = DispatchGroup()
-        
-        dispatchGroup.enter()
-        
-        
     }
 }

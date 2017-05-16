@@ -16,6 +16,34 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
         // Override point for customization after application launch.
+        
+        if let url = URL(string: "https://api.themoviedb.org/3/configuration") {
+            let urlParameters = ["api_key": apiKey]
+            
+            NetworkController.performRequest(for: url, httpMethod: .get, urlParameters: urlParameters, completion: { (data, error) in
+                if let error = error {
+                    print("Unable to get movies ids: \(error.localizedDescription)")
+                }
+                if let data = data {
+                    do {
+                        if let json = try JSONSerialization.jsonObject(with: data, options: .allowFragments) as? jsonDictionary,
+                            let imageConfigJSON = json["images"] as? jsonDictionary {
+                            
+                            MovieController.shared.configuration = TMDBapiConfiguration(jsonDict: imageConfigJSON)
+                        }
+                        
+                        
+                        
+                    } catch {
+                        print("Error deserializing json: \(error.localizedDescription)")
+                    }
+                }
+                
+                
+            })
+        }
+        
+        
         return true
     }
 
