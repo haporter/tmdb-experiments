@@ -13,6 +13,11 @@ class DiscoverMoviesTableViewController: UITableViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
+        MovieController.getMovieIDs(from: .nowPlaying) { (movieIDs) in
+            if let IDs = movieIDs {
+                print(IDs.count)
+            }
+        }
     }
 
     // MARK: - Table view data source

@@ -21,6 +21,7 @@
 		1179BBD81EC9248500015199 /* WatchListCollectionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1179BBD71EC9248500015199 /* WatchListCollectionViewController.swift */; };
 		1179BBDA1EC928F100015199 /* Movie.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1179BBD91EC928F100015199 /* Movie.swift */; };
 		1179BBDD1EC9322800015199 /* NetworkController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1179BBDC1EC9322800015199 /* NetworkController.swift */; };
+		1179BBE01ECA254200015199 /* MovieController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1179BBDF1ECA254200015199 /* MovieController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -61,6 +62,7 @@
 		1179BBD71EC9248500015199 /* WatchListCollectionViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WatchListCollectionViewController.swift; sourceTree = "<group>"; };
 		1179BBD91EC928F100015199 /* Movie.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Movie.swift; sourceTree = "<group>"; };
 		1179BBDC1EC9322800015199 /* NetworkController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NetworkController.swift; sourceTree = "<group>"; };
+		1179BBDF1ECA254200015199 /* MovieController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MovieController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -113,6 +115,7 @@
 			children = (
 				1179BB9A1EC8E87D00015199 /* AppDelegate.swift */,
 				1179BBDB1EC928F700015199 /* Model */,
+				1179BBE11ECA254F00015199 /* ModelControllers */,
 				1179BBCC1EC8EC8100015199 /* ViewControllers */,
 				1179BBDE1EC9323900015199 /* Helpers */,
 				1179BB9E1EC8E87D00015199 /* Main.storyboard */,
@@ -168,6 +171,14 @@
 				1179BBDC1EC9322800015199 /* NetworkController.swift */,
 			);
 			name = Helpers;
+			sourceTree = "<group>";
+		};
+		1179BBE11ECA254F00015199 /* ModelControllers */ = {
+			isa = PBXGroup;
+			children = (
+				1179BBDF1ECA254200015199 /* MovieController.swift */,
+			);
+			name = ModelControllers;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -313,6 +324,7 @@
 				1179BBCB1EC8EC7A00015199 /* DiscoverMoviesTableViewController.swift in Sources */,
 				1179BBD21EC8F16200015199 /* MoviesCollectionViewCell.swift in Sources */,
 				1179BBD61EC921AA00015199 /* MovieSearchViewController.swift in Sources */,
+				1179BBE01ECA254200015199 /* MovieController.swift in Sources */,
 				1179BBDA1EC928F100015199 /* Movie.swift in Sources */,
 				1179BBD81EC9248500015199 /* WatchListCollectionViewController.swift in Sources */,
 				1179BBDD1EC9322800015199 /* NetworkController.swift in Sources */,
