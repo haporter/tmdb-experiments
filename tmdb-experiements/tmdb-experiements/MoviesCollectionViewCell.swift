@@ -16,15 +16,38 @@ class MovieCollectionViewCell: UICollectionViewCell {
     @IBOutlet weak var titleLabel: UILabel!
     @IBOutlet weak var favoriteButton: UIButton!
     @IBOutlet weak var addButton: UIButton!
+    @IBOutlet weak var loadingIndicator: UIActivityIndicatorView!
     
-    override func awakeFromNib() {
-        super.awakeFromNib()
+    override func prepareForReuse() {
+//        DispatchQueue.main.async {
+//            self.updateAppearance(with: .none)
+//        }
     }
     
-    func update(with movie: Movie) {
-        titleLabel.text = movie.title
-        if let poster = movie.poster {
-            posterImageView.image = poster
+    func updateAppearance(with movie: Movie?) {
+        DispatchQueue.main.async {
+            self.display(movie)
+        }
+    }
+    
+    private func display(_ movie: Movie?) {
+        if let movie = movie {
+            loadingIndicator.stopAnimating()
+            self.titleLabel.text = movie.title
+            if let poster = movie.poster {
+                self.posterImageView.image = poster
+            }
+            self.posterImageView.alpha = 1
+            self.titleLabel.alpha  = 1
+            self.favoriteButton.alpha = 1
+            self.addButton.alpha = 1
+        } else {
+            self.posterImageView.alpha = 0
+            self.titleLabel.alpha = 0
+            self.favoriteButton.alpha = 0
+            self.addButton.alpha = 0
+            self.loadingIndicator.alpha = 1
+            self.loadingIndicator.startAnimating()
         }
     }
     

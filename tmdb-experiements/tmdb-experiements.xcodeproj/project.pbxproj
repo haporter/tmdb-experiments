@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		114148341ECB9C1500F4AFCF /* TMDBapiConfiguration.swift in Sources */ = {isa = PBXBuildFile; fileRef = 114148331ECB9C1500F4AFCF /* TMDBapiConfiguration.swift */; };
+		114148361ECBF8EB00F4AFCF /* DataLoadOperation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 114148351ECBF8EB00F4AFCF /* DataLoadOperation.swift */; };
 		1179BB9B1EC8E87D00015199 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1179BB9A1EC8E87D00015199 /* AppDelegate.swift */; };
 		1179BBA01EC8E87D00015199 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 1179BB9E1EC8E87D00015199 /* Main.storyboard */; };
 		1179BBA21EC8E87D00015199 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 1179BBA11EC8E87D00015199 /* Assets.xcassets */; };
@@ -44,6 +45,7 @@
 
 /* Begin PBXFileReference section */
 		114148331ECB9C1500F4AFCF /* TMDBapiConfiguration.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TMDBapiConfiguration.swift; sourceTree = "<group>"; };
+		114148351ECBF8EB00F4AFCF /* DataLoadOperation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DataLoadOperation.swift; sourceTree = "<group>"; };
 		1179BB971EC8E87D00015199 /* tmdb-experiements.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "tmdb-experiements.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		1179BB9A1EC8E87D00015199 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		1179BB9F1EC8E87D00015199 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
@@ -162,6 +164,7 @@
 		1179BBDB1EC928F700015199 /* Model */ = {
 			isa = PBXGroup;
 			children = (
+				114148351ECBF8EB00F4AFCF /* DataLoadOperation.swift */,
 				114148331ECB9C1500F4AFCF /* TMDBapiConfiguration.swift */,
 				1179BBD91EC928F100015199 /* Movie.swift */,
 			);
@@ -330,6 +333,7 @@
 				1179BBD61EC921AA00015199 /* MovieSearchViewController.swift in Sources */,
 				1179BBE01ECA254200015199 /* MovieController.swift in Sources */,
 				1179BBDA1EC928F100015199 /* Movie.swift in Sources */,
+				114148361ECBF8EB00F4AFCF /* DataLoadOperation.swift in Sources */,
 				1179BBD81EC9248500015199 /* WatchListCollectionViewController.swift in Sources */,
 				1179BBDD1EC9322800015199 /* NetworkController.swift in Sources */,
 			);

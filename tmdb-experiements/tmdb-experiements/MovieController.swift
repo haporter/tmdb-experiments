@@ -82,6 +82,7 @@ class MovieController {
             return
         }
         
+        print("URL: \(requestComponents.url)")
         NetworkController.performRequest(for: requestComponents.url, httpMethod: .get, urlParameters: requestComponents.parameters) { (data, error) in
             
             if let error = error {

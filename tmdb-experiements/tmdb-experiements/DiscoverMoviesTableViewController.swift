@@ -12,10 +12,30 @@ class DiscoverMoviesTableViewController: UITableViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+                
         MovieController.getMovies(from: .nowPlaying) { (movies) in
             if let movies = movies {
-                print("I have this many movies: \(movies.count)")
+                print("I have this many now playing movies: \(movies.count)")
+                
+                DispatchQueue.main.async {
+                    self.tableView.reloadData()
+                }
+            }
+        }
+        
+        MovieController.getMovies(from: .popular) { (movies) in
+            if let movies = movies {
+                print("I have this many popular movies: \(movies.count)")
+                
+                DispatchQueue.main.async {
+                    self.tableView.reloadData()
+                }
+            }
+        }
+        
+        MovieController.getMovies(from: .topRated) { (movies) in
+            if let movies = movies {
+                print("I have this many top rated movies: \(movies.count)")
                 
                 DispatchQueue.main.async {
                     self.tableView.reloadData()
@@ -28,7 +48,24 @@ class DiscoverMoviesTableViewController: UITableViewController {
 
     override func numberOfSections(in tableView: UITableView) -> Int {
         // #warning Incomplete implementation, return the number of sections
-        return 1
+        return MovieController.shared.movieCollections.count
+    }
+    
+    override func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
+        var title: String?
+        
+        switch section {
+        case 0:
+            title = "Now Playing"
+        case 1:
+            title = "Popular"
+        case 2:
+            title = "Top Rated"
+        default:
+            break
+        }
+        
+        return title
     }
 
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -40,7 +77,7 @@ class DiscoverMoviesTableViewController: UITableViewController {
         guard let cell = tableView.dequeueReusableCell(withIdentifier: "MoviesCollectionCell", for: indexPath) as? DiscoverMoviesTableViewCell else { return UITableViewCell() }
 
         var movieCollectionKey = ""
-        switch indexPath.row {
+        switch indexPath.section {
         case 0:
             movieCollectionKey = MovieController.Endpoint.nowPlaying.description
         case 1:

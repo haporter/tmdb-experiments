@@ -18,7 +18,7 @@ private let kPosterPath = "poster_path"
 private let kBackDropPath = "backdrop_path"
 private let kRating = "vote_average"
 
-struct Movie: Equatable {
+class Movie: Equatable {
     
     let id: Int
     let title: String
@@ -57,18 +57,29 @@ struct Movie: Equatable {
         self.genre = nil
         self.director = nil
         self.cast = nil
-        
+    }
+    
+    func loadPoster() {
         if let posterURL = MovieController.shared.configuration?.posterURLMedium()?.appendingPathComponent(posterPath),
             let posterData = try? Data(contentsOf: posterURL) {
             
             poster = UIImage(data: posterData)
         }
-        
+    }
+    
+    func loadBackdrop() {
         if let url = MovieController.shared.configuration?.backdropURLMedium()?.appendingPathComponent(backdropPath),
             let backdropData = try? Data(contentsOf: url) {
             
             backdrop = UIImage(data: backdropData)
         }
+    }
+    
+    func loadOperation() -> DataLoadOperation? {
+        if poster != nil {
+            return .none
+        }
+        return DataLoadOperation(self)
     }
 }
 
