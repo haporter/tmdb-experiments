@@ -18,12 +18,6 @@ class MovieCollectionViewCell: UICollectionViewCell {
     @IBOutlet weak var addButton: UIButton!
     @IBOutlet weak var loadingIndicator: UIActivityIndicatorView!
     
-    override func prepareForReuse() {
-//        DispatchQueue.main.async {
-//            self.updateAppearance(with: .none)
-//        }
-    }
-    
     func updateAppearance(with movie: Movie?) {
         DispatchQueue.main.async {
             self.display(movie)

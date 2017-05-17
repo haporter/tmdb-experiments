@@ -29,7 +29,6 @@ class DiscoverMoviesTableViewCell: UITableViewCell {
             self.movies = movies
         }
         
-        collectionView.reloadData()
     }
 
 }
@@ -48,11 +47,7 @@ extension DiscoverMoviesTableViewCell: UICollectionViewDataSource {
         guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "MovieCollectionCell", for: indexPath) as? MovieCollectionViewCell, let movies = movies else { return UICollectionViewCell() }
         
         let movie = movies[indexPath.item]
-        if let _ = movie.poster {
-            cell.updateAppearance(with: movie)
-        } else {
-            cell.updateAppearance(with: .none)
-        }
+        cell.updateAppearance(with: movie)
         return cell
     }
 }
