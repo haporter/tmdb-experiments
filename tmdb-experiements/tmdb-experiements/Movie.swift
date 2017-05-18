@@ -17,20 +17,30 @@ private let kReleaseDate = "release_date"
 private let kPosterPath = "poster_path"
 private let kBackDropPath = "backdrop_path"
 private let kRating = "vote_average"
+private let kRuntime = "runtime"
+private let kGenre = "genres"
+private let kCredits = "credits"
+private let kDirector = "director"
+private let kCrew = "crew"
+private let kJob = "job"
+private let kCast = "cast"
+private let kName = "name"
 
 class Movie: Equatable {
     
     let id: Int
     let title: String
     let year: String
-    let runTime: String?
+    var runtime: Int?
     let userRating: Double
     let synopsis: String
-    let genre: String?
-    let director: String?
-    let cast: [String]?
+    var genres: [String] = []
+    var director: String?
+    var cast: Set<String> = []
     private var posterPath: String
     private var backdropPath: String
+    var liked = false
+    var favorite = false
     
     var poster: UIImage?
     var backdrop: UIImage?
@@ -53,10 +63,8 @@ class Movie: Equatable {
         self.synopsis = synopsis
         self.posterPath = posterPath
         self.backdropPath = bannerPath
-        self.runTime = nil
-        self.genre = nil
+        self.runtime = nil
         self.director = nil
-        self.cast = nil
     }
     
     func loadPoster() {
@@ -81,9 +89,74 @@ class Movie: Equatable {
         }
         return DataLoadOperation(self)
     }
+    
+    func update(_ detailsJSON: jsonDictionary) {
+        guard let runtime = detailsJSON[kRuntime] as? Int,
+            let genreJSON = detailsJSON[kGenre] as? [jsonDictionary],
+            let creditsJSON = detailsJSON[kCredits] as? jsonDictionary,
+            let crewJSON = creditsJSON[kCrew] as? [jsonDictionary],
+            let castJSON = creditsJSON[kCast] as? [jsonDictionary]
+            else { return }
+        
+        for (value) in crewJSON {
+            let job = value[kJob] as? String
+            if job == "Director" {
+                self.director = value[kName] as? String
+            }
+        }
+        
+        self.genres = genreJSON.flatMap({ $0[kName] as? String })
+        self.runtime = runtime
+        
+        var cast = [String]()
+        for (index, value) in castJSON.enumerated() {
+            if index < 5 {
+                cast.append(value[kName] as! String)
+            } else {
+                break
+            }
+        }
+        self.cast = Set(cast)
+        print(cast)
+        loadBackdrop()
+    }
+    
+    func toggleLike() {
+        self.liked = !self.liked
+    }
+    
+    func toggleFavorite() {
+        self.favorite = !self.favorite
+    }
 }
 
 func ==(lhs: Movie, rhs: Movie) -> Bool {
     return lhs.id == rhs.id
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 

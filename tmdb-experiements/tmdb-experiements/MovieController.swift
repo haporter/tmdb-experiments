@@ -14,6 +14,8 @@ class MovieController {
     
     var configuration: TMDBapiConfiguration? = nil
     var movieCollections: [String: [Movie]] = [:]
+    var favorites: [Movie] = []
+    var likedMovies: [Movie] = []
     
     static let shared = MovieController()
     
@@ -117,7 +119,7 @@ class MovieController {
         }
     }
     
-    static func getDetails(for movie: Movie, completion: @escaping (_ movieJSON: jsonDictionary?) -> Void) {
+    static func getDetails(for movie: Movie, completion: @escaping (_ movieJSON: Movie?) -> Void) {
         guard let requestComponents = constructURL(for: .id("\(movie.id)")) else {
             completion(nil)
             return
@@ -142,8 +144,8 @@ class MovieController {
                     return
                 }
                 
-                completion(json)
-                
+                movie.update(json)
+                completion(movie)
             } catch {
                 print("Error deserializing json: \(error.localizedDescription)")
                 completion(nil)

@@ -9,6 +9,7 @@
 import UIKit
 
 class DiscoverMoviesTableViewCell: UITableViewCell {
+    var parentViewController: DiscoverMoviesTableViewController? = nil
     
     let loadingQueue = OperationQueue()
     var loadingOperations = [Int: DataLoadOperation]()
@@ -24,11 +25,9 @@ class DiscoverMoviesTableViewCell: UITableViewCell {
     }
     
     func update(with key: String) {
-        
         if let movies = MovieController.shared.movieCollections[key] {
             self.movies = movies
         }
-        
     }
 
 }
@@ -48,6 +47,8 @@ extension DiscoverMoviesTableViewCell: UICollectionViewDataSource {
         
         let movie = movies[indexPath.item]
         cell.updateAppearance(with: movie)
+        cell.delegate = self
+        cell.movie = movie
         return cell
     }
 }
@@ -84,6 +85,24 @@ extension DiscoverMoviesTableViewCell: UICollectionViewDelegate {
             loadingOperations.removeValue(forKey: movie.id)
         }
     }
+    
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        guard let movie = movies?[indexPath.item] else { return }
+        
+        MovieController.getDetails(for: movie) { (movie) in
+            if let _ = movie {
+                DispatchQueue.main.async {
+                    let storyboard = UIStoryboard(name: "Main", bundle: Bundle.main)
+                    let movieDetailVC = storyboard.instantiateViewController(withIdentifier: "MovieDetail") as! MovieDetailViewController
+                    movieDetailVC.movie = movie
+                    
+                    self.parentViewController?.navigationController?.pushViewController(movieDetailVC, animated: true)
+                }
+            }
+        }
+
+        
+    }
 }
 
 extension DiscoverMoviesTableViewCell: UICollectionViewDataSourcePrefetching {
@@ -107,6 +126,20 @@ extension DiscoverMoviesTableViewCell: UICollectionViewDataSourcePrefetching {
                 dataLoader.cancel()
                 loadingOperations.removeValue(forKey: movie.id)
             }
+        }
+    }
+}
+
+extension DiscoverMoviesTableViewCell: MovieCollectionCellDelegate {
+    func likeForMovieChanged(on cell: MovieCollectionViewCell) {
+        if let indexPath = collectionView.indexPath(for: cell), let movie = movies?[indexPath.item] {
+            movie.toggleLike()
+        }
+    }
+    
+    func favoriteForMovieChanged(on cell: MovieCollectionViewCell) {
+        if let indexPath = collectionView.indexPath(for: cell), let movie = movies?[indexPath.item] {
+            movie.toggleFavorite()
         }
     }
 }
