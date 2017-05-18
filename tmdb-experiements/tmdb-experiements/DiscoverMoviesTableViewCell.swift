@@ -33,7 +33,7 @@ class DiscoverMoviesTableViewCell: UITableViewCell {
 }
 
 extension DiscoverMoviesTableViewCell: UICollectionViewDataSource {
-    
+    // MARK: CollectionViewDataSource methods
     func numberOfSections(in collectionView: UICollectionView) -> Int {
         return 1
     }
@@ -54,6 +54,7 @@ extension DiscoverMoviesTableViewCell: UICollectionViewDataSource {
 }
 
 extension DiscoverMoviesTableViewCell: UICollectionViewDelegate {
+    // MARK: CollectionViewDelegate methods
     func collectionView(_ collectionView: UICollectionView, willDisplay cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
         guard let cell = cell as? MovieCollectionViewCell, let currentMovie = movies?[indexPath.item] else { return }
         
@@ -63,7 +64,8 @@ extension DiscoverMoviesTableViewCell: UICollectionViewDelegate {
         }
         
         if let dataLoader = loadingOperations[currentMovie.id] {
-            if let movie = dataLoader.movie, let _ = movie.poster {
+            let movie = dataLoader.movie
+            if let _ = movie.poster {
                 cell.updateAppearance(with: movie)
                 loadingOperations.removeValue(forKey: currentMovie.id)
             } else {
@@ -106,6 +108,7 @@ extension DiscoverMoviesTableViewCell: UICollectionViewDelegate {
 }
 
 extension DiscoverMoviesTableViewCell: UICollectionViewDataSourcePrefetching {
+    // MARK: Prefetching methods
     func collectionView(_ collectionView: UICollectionView, prefetchItemsAt indexPaths: [IndexPath]) {
         for indexPath in indexPaths {
             guard let movie = movies?[indexPath.item] else { return }
@@ -131,6 +134,7 @@ extension DiscoverMoviesTableViewCell: UICollectionViewDataSourcePrefetching {
 }
 
 extension DiscoverMoviesTableViewCell: MovieCollectionCellDelegate {
+    // MARK: MovieCollectionCellDelegate methods
     func likeForMovieChanged(on cell: MovieCollectionViewCell) {
         if let indexPath = collectionView.indexPath(for: cell), let movie = movies?[indexPath.item] {
             movie.toggleLike()

@@ -8,28 +8,33 @@
 
 import Foundation
 
+
 class DataLoadOperation: Operation {
-    var movie: Movie?
+    var movie: Movie
     var loadingCompleteHandler: ((Movie) -> ())?
     
-    private let _movie: Movie
-    
     init(_ movie: Movie) {
-        _movie = movie
+        self.movie = movie
     }
     
     override func main() {
-        self.movie = _movie
-        guard let movie = movie else { return }
         
         if isCancelled { return }
         
-        movie.loadPoster()
+        self.movie.loadPoster()
         
         if let loadingCompleteHandler = loadingCompleteHandler {
             DispatchQueue.main.async {
-                loadingCompleteHandler(self._movie)
+                loadingCompleteHandler(self.movie)
             }
         }
     }
 }
+
+
+
+
+
+
+
+
